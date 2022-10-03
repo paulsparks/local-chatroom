@@ -1,5 +1,10 @@
 # local-chatroom
 
+#Run the project for development this way!
+```
+npm run electron:serve
+```
+
 ## Project setup
 ```
 npm install
