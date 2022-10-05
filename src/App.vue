@@ -1,14 +1,14 @@
 <template>
-  <HelloWorld/>
+  <CountingExample/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CountingExample from './components/CountingExample.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    CountingExample
   }
 }
 </script>
