@@ -15,7 +15,7 @@
 </script>
 
 <template>
-  <button @:click="number++">{{ number }}</button>
+  <button @:click="incrementNumber">{{ number }}</button>
   <div class="dropdown">
     <button
       class="btn btn-secondary dropdown-toggle"
