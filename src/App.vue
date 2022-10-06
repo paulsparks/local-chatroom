@@ -1,17 +1,18 @@
 <template>
-  <CountingExample/>
-  <BootstrapExample/>
+  <!-- <CountingExample/>
+  <BootstrapExample/> -->
+  <div class="welcomeScreen"><WelcomeScreen/></div>
 </template>
 
 <script>
-import CountingExample from './components/CountingExample.vue';
-import BootstrapExample from './components/BootstrapExample.vue';
+import WelcomeScreen from './components/WelcomeScreen.vue';
+// import CountingExample from './components/CountingExample.vue';
+// import BootstrapExample from './components/BootstrapExample.vue';
 
 export default {
   name: 'App',
   components: {
-    CountingExample,
-    BootstrapExample
+    WelcomeScreen
 }
 }
 </script>
@@ -22,7 +23,14 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  background-color: #2f383d;
+}
+
+html {
+  background-color: #2f383d;
+}
+
+.welcomeScreen {
+  margin-top: 200px;
 }
 </style>
