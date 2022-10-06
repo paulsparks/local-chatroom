@@ -1,13 +1,9 @@
 <template>
-  <!-- <CountingExample/>
-  <BootstrapExample/> -->
-  <div class="welcomeScreen"><WelcomeScreen/></div>
+  <div id="welcomeScreen"><WelcomeScreen/></div>
 </template>
 
 <script>
 import WelcomeScreen from './components/WelcomeScreen.vue';
-// import CountingExample from './components/CountingExample.vue';
-// import BootstrapExample from './components/BootstrapExample.vue';
 
 export default {
   name: 'App',
@@ -30,7 +26,7 @@ html {
   background-color: #2f383d;
 }
 
-.welcomeScreen {
+#welcomeScreen {
   margin-top: 200px;
 }
 </style>
