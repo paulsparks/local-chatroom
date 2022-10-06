@@ -1,15 +1,18 @@
 <template>
   <CountingExample/>
+  <BootstrapExample/>
 </template>
 
 <script>
 import CountingExample from './components/CountingExample.vue';
+import BootstrapExample from './components/BootstrapExample.vue';
 
 export default {
   name: 'App',
   components: {
-    CountingExample
-  }
+    CountingExample,
+    BootstrapExample
+}
 }
 </script>
 
