@@ -16,7 +16,7 @@
                     <div class="col-8" style="margin-left:auto;margin-right:auto;">
                         <p style="color:white;">You will go by {{ generatedName }}.</p>
                         <div class="col-8" style="margin-left:auto;margin-right:auto;">
-                            <button @:click="generateName(); toggleVisibility('startText'); toggleVisibility('nameDisplay')" type="button" class="btn btn-primary">Continue</button>
+                            <button @:click="generateName(); removeItem('welcomeScreen')" type="button" class="btn btn-primary">Continue</button>
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,17 @@
                     'SleepyFish',
                     'ScaryDog',
                     'CuddlyKitten',
-                    'MasterfulSquirrel'
+                    'MasterfulSquirrel',
+                    'AngryShark',
+                    'DerangedBeetle',
+                    'PrancingOrangatan',
+                    'GoofyBaboon',
+                    'SpyingOwl',
+                    'LurkingOstrich',
+                    'CheerfulChimp',
+                    'NefariousHog',
+                    'SqueamishFerret',
+                    'SheepishLamb'
                 ],
                 generatedName: ''
             }
@@ -49,7 +59,6 @@
         methods: {
             generateName() {
                 let randomNum = Math.floor(Math.random() * (this.nameList.length))
-                console.log(randomNum)
                 this.generatedName = this.nameList[randomNum]
             },
             removeItem(item) {
