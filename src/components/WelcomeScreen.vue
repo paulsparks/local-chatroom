@@ -16,7 +16,7 @@
                     <div class="col-8" style="margin-left:auto;margin-right:auto;">
                         <p style="color:white;">You will go by {{ generatedName }}.</p>
                         <div class="col-8" style="margin-left:auto;margin-right:auto;">
-                            <button @:click="generateName(); removeItem('welcomeScreen')" type="button" class="btn btn-primary">Continue</button>
+                            <button @:click="removeItem('welcomeScreen'); toggleVisibility('mainPage')" type="button" class="btn btn-primary">Continue</button>
                         </div>
                     </div>
                 </div>

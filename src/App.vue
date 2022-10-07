@@ -1,32 +1,43 @@
 <template>
   <div id="welcomeScreen"><WelcomeScreen/></div>
+  <div id="mainPage" class="hiddenElement"><MainPage/></div>
 </template>
 
 <script>
 import WelcomeScreen from './components/WelcomeScreen.vue';
+import MainPage from './components/MainPage.vue';
 
 export default {
   name: 'App',
   components: {
-    WelcomeScreen
+    WelcomeScreen,
+    MainPage
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  background-color: #2f383d;
-}
+  #app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    background-color: #2f383d;
+  }
 
-html {
-  background-color: #2f383d;
-}
+  html {
+    background-color: #2f383d;
+  }
 
-#welcomeScreen {
-  margin-top: 200px;
-}
+  #welcomeScreen {
+    margin-top: 200px;
+  }
+  
+  .hiddenElement {
+    display: none;
+  }
+
+  .unhiddenElement {
+    display: block;
+  }
 </style>
