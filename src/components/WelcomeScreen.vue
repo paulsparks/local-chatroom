@@ -50,7 +50,8 @@
                     'CheerfulChimp',
                     'NefariousHog',
                     'SqueamishFerret',
-                    'SheepishLamb'
+                    'SheepishLamb',
+                    'InkySquid'
                 ],
                 generatedName: ''
             }
