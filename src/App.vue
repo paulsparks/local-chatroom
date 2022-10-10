@@ -6,12 +6,19 @@
 <script>
 import WelcomeScreen from './components/WelcomeScreen.vue';
 import MainPage from './components/MainPage.vue';
+import socketioService from '../services/socketio.service';
 
 export default {
   name: 'App',
   components: {
     WelcomeScreen,
     MainPage
+  },
+  created() {
+    socketioService.setupSocketConnection()
+  },
+  beforeUnmount() {
+    socketioService.disconnect()
   }
 }
 </script>
