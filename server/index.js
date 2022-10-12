@@ -14,9 +14,10 @@ io.on('connection', (socket) => {
     //     console.log(`user ${socket.id} disconnected`)
     // })
 
-    socket.on('message given', (msg) => {
-        console.log(`user ${socket.id} says "${msg}"`)
-        io.emit('message recieved', msg)
+    socket.on('message given', (dataString) => {
+        let data = JSON.parse(dataString)
+        console.log(`${socket.id}: ${dataString}`)
+        io.emit('message recieved', JSON.stringify({ message: data.message, user: data.user }))
     })
 
 })

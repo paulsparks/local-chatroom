@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-10 offset-1 fixed-bottom" id="chatDisplayWrapper">
                 <ul id="chatDisplay">
-                    <li v-for="(msg, i) in msgs" :key="i"><h2>{{ msg }}</h2></li>
+                    <li v-for="(msg, i) in msgs" :key="i"><h2 style="font-size: 20pt;"><span style="color:aqua;">{{ msg.user }}: </span>{{ msg.message }}</h2></li>
                 </ul>
             </div>
         </div>
@@ -34,16 +34,21 @@
             return {
                 message: '',
                 messageRecieved: '',
+                // msgs is an array of objects passed in from recieved messages
+                // this object currently just contains { user: '', message: '' }
                 msgs: []
             }
         },
         props: ['username'],
         created() {
-            socket.on('message recieved', (msg) => {
-                this.messageRecieved = msg
-                this.msgs.push(msg)
-                let bottomOfChat = document.getElementById('chatDisplayWrapper')
-                bottomOfChat.scrollTop = (bottomOfChat.scrollHeight)
+            socket.on('message recieved', (dataString) => {
+                let data = JSON.parse(dataString)
+                this.messageRecieved = data.message
+                this.msgs.push(data)
+                this.$nextTick(() => {
+                    let bottomOfChat = document.getElementById('chatDisplayWrapper')
+                    bottomOfChat.scrollTop = (bottomOfChat.scrollHeight)
+                })
             })
         },
         methods: {
@@ -64,7 +69,7 @@
             sendMessage(msg) {
                 msg = msg.trim()
                 if (msg != '') {
-                    socket.emit('message given', `${this.username}: ${msg}`)
+                    socket.emit('message given', JSON.stringify({ user: this.username, message: msg }))
                     this.message = ''
                 }
             }
@@ -74,7 +79,7 @@
 
 <style scoped>
     #chatBox {
-        background-color: #515657;
+        background-color: #2c3e5c;
         height: 100px;
     }
     #chatDisplay {
@@ -85,7 +90,7 @@
         overflow-wrap: break-word;
     }
     #chatDisplayWrapper {
-        background-color: black;
+        background-color: #0c1426;
         margin-bottom: 200px;
         height: 60%;
         overflow-y: auto;
