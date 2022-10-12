@@ -5,6 +5,7 @@ const io = require('socket.io')(http, {
         origins: ['http://localhost:8080']
     }
 })
+const fs = require('fs')
 
 io.on('connection', (socket) => {
 
@@ -18,6 +19,14 @@ io.on('connection', (socket) => {
         let data = JSON.parse(dataString)
         console.log(`${socket.id}: ${dataString}`)
         io.emit('message recieved', JSON.stringify({ message: data.message, user: data.user }))
+
+        // log the file
+        let currentDate = new Date()//.toLocaleDateString()
+        let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+        let dateString = currentDate.toLocaleDateString() + ' ' + currentTime
+        fs.appendFile('./logs.txt', `${socket.id}: ${dataString} ${dateString}\n`, 'utf8', function(error) {
+            if (error) throw error
+        })
     })
 
 })
