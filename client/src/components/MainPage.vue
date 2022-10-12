@@ -88,6 +88,7 @@
         min-width: 100%;
         text-align: left;
         overflow-wrap: break-word;
+        padding-left: 0;
     }
     #chatDisplayWrapper {
         background-color: #0c1426;
