@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-10" id="chatDisplayWrapper">
+            <div class="col-10 offset-1 fixed-bottom" id="chatDisplayWrapper">
                 <ul id="chatDisplay">
                     <li v-for="(msg, i) in msgs" :key="i"><h2>{{ msg }}</h2></li>
                 </ul>
@@ -42,6 +42,8 @@
             socket.on('message recieved', (msg) => {
                 this.messageRecieved = msg
                 this.msgs.push(msg)
+                let bottomOfChat = document.getElementById('chatDisplayWrapper')
+                bottomOfChat.scrollTop = (bottomOfChat.scrollHeight)
             })
         },
         methods: {
@@ -84,5 +86,8 @@
     }
     #chatDisplayWrapper {
         background-color: black;
+        margin-bottom: 200px;
+        height: 60%;
+        overflow-y: auto;
     }
 </style>
