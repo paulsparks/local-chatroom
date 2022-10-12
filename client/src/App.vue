@@ -34,15 +34,32 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    background-color: #2f383d;
+    background-color: #0f172a;
   }
 
   html {
-    background-color: #2f383d;
+    background-color: #0f172a;
+  }
+
+  .btn-primary {
+    background-color: #b8dfff !important;
+    border-color: #b8dfff !important;
+  }
+
+  .btn-primary {
+    color: black !important;
+  }
+
+  .btn-primary:hover {
+    color: black !important;
+  }
+
+  .btn-primary:active:focus {
+    color: black !important;
   }
 
   #welcomeScreen {
-    margin-top: 200px;
+    margin-top: 130px;
   }
   
   .hiddenElement {
