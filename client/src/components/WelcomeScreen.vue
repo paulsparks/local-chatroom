@@ -16,7 +16,7 @@
                     <div class="col-8" style="margin-left:auto;margin-right:auto;">
                         <p style="color:white;">You will go by {{ generatedName }}.</p>
                         <div class="col-8" style="margin-left:auto;margin-right:auto;">
-                            <button @:click="removeItem('welcomeScreen'); toggleVisibility('mainPage')" type="button" class="btn btn-primary">Continue</button>
+                            <button @:click="confirmUsername(); removeItem('welcomeScreen'); toggleVisibility('mainPage')" type="button" class="btn btn-primary">Continue</button>
                         </div>
                     </div>
                 </div>
@@ -55,8 +55,10 @@
                 generatedName: ''
             }
         },
-    
         methods: {
+            confirmUsername() {
+                this.$emit('confirmUsername', this.generatedName)
+            },
             generateName() {
                 let randomNum = Math.floor(Math.random() * (this.nameList.length))
                 this.generatedName = this.nameList[randomNum]
