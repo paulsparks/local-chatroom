@@ -1,8 +1,10 @@
 <template>
-    <div class="container-fluid">
-        <div class="row" style="margin-top:400px">
-            <div class="col-8 offset-1" style="background-color:white;height:45px;">
-                <h1 style="float:left;">{{ messageRecieved }}</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-10" id="chatDisplayWrapper">
+                <ul id="chatDisplay">
+                    <li v-for="(msg, i) in msgs" :key="i"><h2>{{ msg }}</h2></li>
+                </ul>
             </div>
         </div>
         <div class="row fixed-bottom" id="chatRow">
@@ -29,12 +31,15 @@
         data() {
             return {
                 message: '',
-                messageRecieved: ''
+                messageRecieved: '',
+                msgs: []
             }
         },
+        props: ['username'],
         created() {
             socket.on('message recieved', (msg) => {
                 this.messageRecieved = msg
+                this.msgs.push(msg)
             })
         },
         methods: {
@@ -53,7 +58,7 @@
                 }
             },
             sendMessage(msg) {
-                socket.emit('message given', msg)
+                socket.emit('message given', `${this.username}: ${msg}`)
             }
         }
     }
@@ -63,5 +68,13 @@
     #chatBox {
         background-color: #515657;
         height: 100px;
+    }
+    #chatDisplay {
+        color: white;
+        list-style: none;
+        float: left;
+    }
+    #chatDisplayWrapper {
+        background-color: black;
     }
 </style>

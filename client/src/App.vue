@@ -1,6 +1,6 @@
 <template>
-  <div id="welcomeScreen"><WelcomeScreen/></div>
-  <div id="mainPage" class="hiddenElement"><MainPage/></div>
+  <div id="welcomeScreen"><WelcomeScreen @confirmUsername="usernameProp = $event" /></div>
+  <div id="mainPage" class="hiddenElement"><MainPage :username="usernameProp" /></div>
 </template>
 
 <script>
@@ -13,6 +13,11 @@ export default {
   components: {
     WelcomeScreen,
     MainPage
+  },
+  data() {
+    return {
+      usernameProp: ''
+    }
   },
   created() {
     socketioService.setupSocketConnection()
