@@ -11,9 +11,11 @@
             <div class="col-12" id="chatBox">
                 <div class="container d-flex h-100">
                     <div class="row align-self-center w-100">
-                        <div class="col-12">
-                            <input v-model="message" type="email" class="form-control" id="exampleFormControlInput1">
-                            <button @:click="sendMessage(message)">send</button>
+                        <div class="col-10">
+                            <input @keyup.enter="sendMessage(message)" v-model="message" class="form-control">
+                        </div>
+                        <div class="col-2 d-grid">
+                            <button class="btn btn-primary" @:click="sendMessage(message)">send</button>
                         </div>
                     </div>
                 </div>
@@ -58,7 +60,11 @@
                 }
             },
             sendMessage(msg) {
-                socket.emit('message given', `${this.username}: ${msg}`)
+                msg = msg.trim()
+                if (msg != '') {
+                    socket.emit('message given', `${this.username}: ${msg}`)
+                    this.message = ''
+                }
             }
         }
     }
@@ -72,7 +78,9 @@
     #chatDisplay {
         color: white;
         list-style: none;
-        float: left;
+        min-width: 100%;
+        text-align: left;
+        overflow-wrap: break-word;
     }
     #chatDisplayWrapper {
         background-color: black;
