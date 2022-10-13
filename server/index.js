@@ -9,11 +9,17 @@ const fs = require('fs')
 
 io.on('connection', (socket) => {
 
-    // console.log(`user ${socket.id} connected`)
+    let userCount
 
-    // socket.on('disconnect', () => {
-    //     console.log(`user ${socket.id} disconnected`)
-    // })
+    // this is a horrible solution to an underlying problem
+    // where one user connects two sockets! fix later!
+    if (socket.client.conn.server.clientsCount > 1) {
+        userCount = socket.client.conn.server.clientsCount / 2
+    } else {
+        userCount = socket.client.conn.server.clientsCount
+    }
+
+    // console.log(`user ${socket.id} connected`)
 
     socket.on('message given', (dataString) => {
         let data = JSON.parse(dataString)
@@ -27,6 +33,23 @@ io.on('connection', (socket) => {
         fs.appendFile('./logs.txt', `${socket.id}: ${dataString} ${dateString}\n`, 'utf8', function(error) {
             if (error) throw error
         })
+    })
+
+    socket.on('get users', () => {
+        io.emit('user count', userCount)
+    })
+
+    socket.on('disconnect', () => {
+
+        // this is a horrible solution to an underlying problem
+        // where one user connects two sockets! fix later!
+        if (socket.client.conn.server.clientsCount > 1) {
+            userCount = socket.client.conn.server.clientsCount / 2
+        } else {
+            userCount = socket.client.conn.server.clientsCount
+        }
+
+        io.emit('user count', userCount)
     })
 
 })

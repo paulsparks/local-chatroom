@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <h1 style="margin-top: 40px; color: white;">users: {{ activeUsers }}</h1>
         <div class="row">
             <div class="col-10 offset-1 fixed-bottom" id="chatDisplayWrapper">
                 <ul id="chatDisplay">
@@ -36,7 +37,8 @@
                 messageRecieved: '',
                 // msgs is an array of objects passed in from recieved messages
                 // this object currently just contains { user: '', message: '' }
-                msgs: []
+                msgs: [],
+                activeUsers: 0
             }
         },
         props: ['username'],
@@ -49,6 +51,12 @@
                     let bottomOfChat = document.getElementById('chatDisplayWrapper')
                     bottomOfChat.scrollTop = (bottomOfChat.scrollHeight)
                 })
+            })
+
+            socket.emit('get users')
+
+            socket.on('user count', (userCount) => {
+                this.activeUsers = userCount
             })
         },
         methods: {
