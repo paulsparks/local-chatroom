@@ -40,6 +40,10 @@ io.on('connection', (socket) => {
         console.log(`user ${socket.id} disconnected`)
     })
 
+    socket.on('image given', (imgObj) => {
+        io.emit('image recieved', imgObj)
+    })
+
 })
 
 http.listen(3000, () => {

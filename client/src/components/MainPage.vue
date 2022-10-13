@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-10 offset-1 fixed-bottom" id="chatDisplayWrapper">
                 <ul id="chatDisplay">
-                    <li v-for="(msg, i) in msgs" :key="i"><h2 style="font-size: 20pt;"><span style="color:aqua;">{{ msg.user }}: </span>{{ msg.message }}</h2></li>
+                    <li v-for="(msg, i) in msgs" :key="i"><h2 style="font-size: 20pt;"><span style="color:aqua;">{{ msg.user }}: </span>{{ msg.message }}</h2><img :src="msg.image" class="imageSent"></li>
                 </ul>
             </div>
         </div>
@@ -15,13 +15,13 @@
                 <div class="container d-flex h-100">
                     <div class="row align-self-center w-100">
                         <div class="col-1">
-                            <i id="emojiKeyboard" class="bi bi-card-image" style="font-size: 20pt; color: #b8dfff; cursor: pointer;"></i>
+                            <input id="fileInput" type="file" style="display: none;" @change="onFileSelected"><label for="fileInput"><i class="bi bi-card-image" style="font-size: 20pt; color: #b8dfff; cursor: pointer;"></i></label>
                         </div>
                         <div class="col-9">
-                            <input id="inputBox" @keyup.enter="sendMessage(message)" v-model="message" class="form-control">
+                            <input id="inputBox" @keyup.enter="sendMessage(message); onUpload()" v-model="message" class="form-control">
                         </div>
                         <div class="col-2 d-grid">
-                            <button class="btn btn-primary" @:click="sendMessage(message)">send</button>
+                            <button class="btn btn-primary" @:click="sendMessage(message); onUpload()">send</button>
                         </div>
                     </div>
                 </div>
@@ -38,11 +38,11 @@
         data() {
             return {
                 message: '',
-                messageRecieved: '',
                 // msgs is an array of objects passed in from recieved messages
                 // this object currently just contains { user: '', message: '' }
                 msgs: [],
-                activeUsers: 0
+                activeUsers: 0,
+                selectedFile: null
             }
         },
         props: ['username'],
@@ -51,7 +51,6 @@
 
             socketioService.socket.on('message recieved', (dataString) => {
                 let data = JSON.parse(dataString)
-                this.messageRecieved = data.message
                 this.msgs.push(data)
                 this.$nextTick(() => {
                     let bottomOfChat = document.getElementById('chatDisplayWrapper')
@@ -63,6 +62,14 @@
 
             socketioService.socket.on('user count', (userCount) => {
                 this.activeUsers = userCount
+            })
+
+            socketioService.socket.on('image recieved', (img) => {
+                this.msgs.push(img)
+                this.$nextTick(() => {
+                    let bottomOfChat = document.getElementById('chatDisplayWrapper')
+                    bottomOfChat.scrollTop = (bottomOfChat.scrollHeight)
+                })
             })
 
         },
@@ -84,9 +91,21 @@
             sendMessage(msg) {
                 msg = msg.trim()
                 if (msg != '') {
-                    socketioService.socket.emit('message given', JSON.stringify({ user: this.username, message: msg }))
+                    socketioService.socket.emit('message given', JSON.stringify({ user: this.username, message: msg, image: null }))
                     this.message = ''
                 }
+            },
+            onFileSelected(event) {
+                this.selectedFile = event.target.files[0]
+            },
+            onUpload() {
+                const reader = new FileReader()
+                reader.onload = e => {
+                    socketioService.socket.emit('image given', { user: this.username, message: null, image: e.target.result })
+                }
+                reader.readAsDataURL(this.selectedFile)
+                this.selectedFile = null
+                document.getElementById('fileInput').value = ''
             }
         },
         beforeUnmount() {
@@ -113,5 +132,13 @@
         margin-bottom: 200px;
         height: 60%;
         overflow-y: auto;
+    }
+    .imageSent {
+        height: 200px;
+    }
+    @media only screen and (max-width: 400px) {
+        .imageSent {
+            height: 100px;
+        }
     }
 </style>
