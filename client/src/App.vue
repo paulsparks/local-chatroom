@@ -6,7 +6,6 @@
 <script>
 import WelcomeScreen from './components/WelcomeScreen.vue';
 import MainPage from './components/MainPage.vue';
-import socketioService from '../services/socketio.service';
 
 export default {
   name: 'App',
@@ -18,12 +17,6 @@ export default {
     return {
       usernameProp: ''
     }
-  },
-  created() {
-    socketioService.setupSocketConnection()
-  },
-  beforeUnmount() {
-    socketioService.disconnect()
   }
 }
 </script>
