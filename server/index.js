@@ -9,18 +9,10 @@ const fs = require('fs')
 
 io.on('connection', (socket) => {
 
-    let userCount
-    let clientIp = socket.request.connection.remoteAddress;
+    let userCount = socket.client.conn.server.clientsCount
+    let clientIp = socket.request.connection.remoteAddress
 
-    // this is a horrible solution to an underlying problem
-    // where one user connects two sockets! fix later!
-    if (socket.client.conn.server.clientsCount > 1) {
-        userCount = socket.client.conn.server.clientsCount / 2
-    } else {
-        userCount = socket.client.conn.server.clientsCount
-    }
-
-    // console.log(`user ${socket.id} connected`)
+    console.log(`user ${socket.id} connected`)
 
     socket.on('message given', (dataString) => {
         let data = JSON.parse(dataString)
@@ -42,15 +34,10 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
 
-        // this is a horrible solution to an underlying problem
-        // where one user connects two sockets! fix later!
-        if (socket.client.conn.server.clientsCount > 1) {
-            userCount = socket.client.conn.server.clientsCount / 2
-        } else {
-            userCount = socket.client.conn.server.clientsCount
-        }
+        userCount = socket.client.conn.server.clientsCount
 
         io.emit('user count', userCount)
+        console.log(`user ${socket.id} disconnected`)
     })
 
 })

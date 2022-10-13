@@ -31,8 +31,7 @@
 </template>
 
 <script>
-    import { io } from 'socket.io-client'
-    let socket = io(process.env.VUE_APP_SOCKET_ENDPOINT)
+    import socketioService from '../../services/socketio.service';
 
     export default {
         name: 'MainPage',
@@ -48,7 +47,9 @@
         },
         props: ['username'],
         created() {
-            socket.on('message recieved', (dataString) => {
+            socketioService.setupSocketConnection()
+
+            socketioService.socket.on('message recieved', (dataString) => {
                 let data = JSON.parse(dataString)
                 this.messageRecieved = data.message
                 this.msgs.push(data)
@@ -58,9 +59,9 @@
                 })
             })
 
-            socket.emit('get users')
+            socketioService.socket.emit('get users')
 
-            socket.on('user count', (userCount) => {
+            socketioService.socket.on('user count', (userCount) => {
                 this.activeUsers = userCount
             })
         },
@@ -82,10 +83,13 @@
             sendMessage(msg) {
                 msg = msg.trim()
                 if (msg != '') {
-                    socket.emit('message given', JSON.stringify({ user: this.username, message: msg }))
+                    socketioService.socket.emit('message given', JSON.stringify({ user: this.username, message: msg }))
                     this.message = ''
                 }
             }
+        },
+        beforeUnmount() {
+            socketioService.disconnect()
         }
     }
 </script>
