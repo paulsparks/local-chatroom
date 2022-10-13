@@ -10,6 +10,7 @@ const fs = require('fs')
 io.on('connection', (socket) => {
 
     let userCount
+    let clientIp = socket.request.connection.remoteAddress;
 
     // this is a horrible solution to an underlying problem
     // where one user connects two sockets! fix later!
@@ -30,7 +31,7 @@ io.on('connection', (socket) => {
         let currentDate = new Date()//.toLocaleDateString()
         let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
         let dateString = currentDate.toLocaleDateString() + ' ' + currentTime
-        fs.appendFile('./logs.txt', `${socket.id}: ${dataString} ${dateString}\n`, 'utf8', function(error) {
+        fs.appendFile('./logs.txt', `${socket.id}: ${dataString} ${dateString} ${clientIp}\n`, 'utf8', function(error) {
             if (error) throw error
         })
     })
