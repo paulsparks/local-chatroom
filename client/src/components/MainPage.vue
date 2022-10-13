@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <h1 style="margin-top: 40px; color: white;">users: {{ activeUsers }}</h1>
+        <div class="row">
+            <h1 style="margin-top: 10px; color: white; font-size: 12pt; text-align: left;">users: {{ activeUsers }}</h1>
+        </div>
         <div class="row">
             <div class="col-10 offset-1 fixed-bottom" id="chatDisplayWrapper">
                 <ul id="chatDisplay">
