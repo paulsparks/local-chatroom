@@ -14,7 +14,10 @@
             <div class="col-12" id="chatBox">
                 <div class="container d-flex h-100">
                     <div class="row align-self-center w-100">
-                        <div class="col-10">
+                        <div class="col-1 d-grid">
+                            <i class="bi bi-emoji-smile" style="font-size: 20pt; color: #b8dfff; cursor: pointer;"></i>
+                        </div>
+                        <div class="col-9">
                             <input @keyup.enter="sendMessage(message)" v-model="message" class="form-control">
                         </div>
                         <div class="col-2 d-grid">
