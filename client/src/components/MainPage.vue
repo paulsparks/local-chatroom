@@ -31,7 +31,7 @@
                 <div class="container d-flex h-100">
                     <div class="row align-self-center w-100">
                         <div class="col-1 offset-1 offset-sm-0">
-                            <input id="fileInput" type="file" style="display: none;" @change="onFileSelected"><label for="fileInput"><i class="bi bi-card-image" style="font-size: 20pt; color: #b8dfff; cursor: pointer;"></i></label>
+                            <input id="fileInput" accept="image/*" type="file" style="display: none;" @change="onFileSelected"><label for="fileInput"><i class="bi bi-card-image" style="font-size: 20pt; color: #b8dfff; cursor: pointer;"></i></label>
                         </div>
                         <div class="col-6 offset-1 offset-sm-0 col-sm-9">
                             <input id="inputBox" @keyup.enter="sendMessage(message); onUpload()" v-model="message" class="form-control">
