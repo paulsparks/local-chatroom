@@ -35,6 +35,7 @@
     let socket = io(process.env.VUE_APP_SOCKET_ENDPOINT)
 
     export default {
+        
         name: 'MainPage',
         data() {
             return {
@@ -43,7 +44,10 @@
                 // msgs is an array of objects passed in from recieved messages
                 // this object currently just contains { user: '', message: '' }
                 msgs: [],
-                activeUsers: 0
+                activeUsers: 0,
+                raw: 'greetings from vuejsfeed.com'
+          
+        
             }
         },
         props: ['username'],
