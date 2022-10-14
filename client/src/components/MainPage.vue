@@ -149,7 +149,7 @@
 
 <style scoped>
     #chatBox {
-        background-color: #2c3e5c;
+        background-color: #101a42;
         height: 100px;
     }
     #chatDisplay {
@@ -165,6 +165,11 @@
         margin-bottom: 200px;
         height: 60%;
         overflow-y: auto;
+    }
+    #inputBox {
+        background-color: #273366;
+        color: white;
+        border-color: black;
     }
     .imageSent {
         height: 200px;

@@ -33,28 +33,51 @@
     export default {
         data() {
             return {
-                nameList: [
-                    'HappyMonkey',
-                    'FluffyElephant',
-                    'HoppingTurtle',
-                    'BlushingCrow',
-                    'FunnyBird',
-                    'WaddlingPenguin',
-                    'SleepyFish',
-                    'ScaryDog',
-                    'CuddlyKitten',
-                    'MasterfulSquirrel',
-                    'AngryShark',
-                    'DerangedBeetle',
-                    'PrancingOrangatan',
-                    'GoofyBaboon',
-                    'SpyingOwl',
-                    'LurkingOstrich',
-                    'CheerfulChimp',
-                    'NefariousHog',
-                    'SqueamishFerret',
-                    'SheepishLamb',
-                    'InkySquid'
+                adjList: [
+                    'Happy',
+                    'Fluffy',
+                    'Hopping',
+                    'Blushing',
+                    'Funny',
+                    'Waddling',
+                    'Sleepy',
+                    'Scary',
+                    'Cuddly',
+                    'Masterful',
+                    'Angry',
+                    'Deranged',
+                    'Prancing',
+                    'Goofy',
+                    'Spying',
+                    'Lurking',
+                    'Cheerful',
+                    'Nefarious',
+                    'Squeamish',
+                    'Sheepish',
+                    'Inky'
+                ],
+                animalList: [
+                    'Monkey',
+                    'Elephant',
+                    'Turtle',
+                    'Crow',
+                    'Bird',
+                    'Penguin',
+                    'Fish',
+                    'Dog',
+                    'Kitten',
+                    'Squirrel',
+                    'Beetle',
+                    'Orangatan',
+                    'Baboon',
+                    'Owl',
+                    'Ostrich',
+                    'Chimp',
+                    'Hog',
+                    'Ferret',
+                    'Lamb',
+                    'Squid',
+                    'Shark'
                 ],
                 generatedName: ''
             }
@@ -64,8 +87,10 @@
                 this.$emit('confirmUsername', this.generatedName)
             },
             generateName() {
-                let randomNum = Math.floor(Math.random() * (this.nameList.length))
-                this.generatedName = this.nameList[randomNum]
+                let randomAdj = Math.floor(Math.random() * (this.adjList.length))
+                let randomAnim = Math.floor(Math.random() * (this.animalList.length))
+                let randomNum = Math.floor(Math.random() * 100)
+                this.generatedName = this.adjList[randomAdj] + this.animalList[randomAnim] + randomNum
             },
             removeItem(item) {
                 let element = document.getElementById(item)
