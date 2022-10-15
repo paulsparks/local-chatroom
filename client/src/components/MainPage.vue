@@ -169,7 +169,7 @@
     #inputBox {
         background-color: #273366;
         color: white;
-        border-color: black;
+        border-color: transparent;
     }
     .imageSent {
         height: 200px;

@@ -6,7 +6,12 @@ const io = require('socket.io')(http, {
     },
     maxHttpBufferSize: 8e6 // 8 MB
 })
+const { createHash } = require('crypto');
 const fs = require('fs')
+
+function hash(string) {
+    return createHash('sha256').update(string).digest('hex');
+}
 
 io.on('connection', (socket) => {
 
@@ -42,7 +47,17 @@ io.on('connection', (socket) => {
     })
 
     socket.on('image given', (imgObj) => {
+        let imgName = hash(imgObj.image)
+        console.log(`${socket.id}: (image): ${imgName}`)
         io.emit('image recieved', imgObj)
+
+        // log the file
+        let currentDate = new Date()//.toLocaleDateString()
+        let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+        let dateString = currentDate.toLocaleDateString() + ' ' + currentTime
+        fs.appendFile('./logs.txt', `${socket.id}: (image): ${imgName} ${dateString} ${clientIp}\n`, 'utf8', function(error) {
+            if (error) throw error
+        })
     })
 
 })
