@@ -17,7 +17,6 @@ function hash(string) {
 io.on('connection', (socket) => {
 
     let userCount = socket.client.conn.server.clientsCount
-    let clientIp = socket.request.connection.remoteAddress
 
     console.log(`user ${socket.id} connected`)
 
@@ -51,22 +50,20 @@ io.on('connection', (socket) => {
         let imgName = hash(imgObj.image)
         console.log(`${socket.id}: (image): ${imgName}`)
         io.emit('image recieved', imgObj)
-
+        
         // log the file
         let currentDate = new Date()
         let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
         let dateString = currentDate.toLocaleDateString() + ' ' + currentTime
-        fs.appendFile('./logs.txt', `${socket.id}: (image): ${imgName} ${dateString} ${clientIp}\n`, 'utf8', function(error) {
+        fs.appendFile('./logs.txt', `${socket.id}: (image): ${imgName} ${dateString}\n`, 'utf8', function(error) {
             if (error) throw error
         })
     })
 
 })
 
-let logText = "";
-
 app.get( "/", (req, res) => {
-    res.download('./logs.txt');
+    res.sendFile(process.cwd() + '/logs.txt');
 })
 
 http.listen(PORT, () => {
