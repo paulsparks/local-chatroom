@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
         let currentDate = new Date()
         let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
         let dateString = currentDate.toLocaleDateString() + ' ' + currentTime
-        fs.appendFile('./logs.txt', `${socket.id}: ${dataString} ${dateString} ${clientIp}\n`, 'utf8', function(error) {
+        fs.appendFile('./logs.txt', `${socket.id}: ${dataString} ${dateString}\n`, 'utf8', function(error) {
             if (error) throw error
         })
     })
