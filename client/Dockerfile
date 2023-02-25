@@ -1,5 +1,7 @@
 FROM node:lts-alpine
 
+ENV VUE_APP_SOCKET_ENDPOINT='localhost:3000'
+
 RUN npm install -g http-server
 
 RUN mkdir /app
