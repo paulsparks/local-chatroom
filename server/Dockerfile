@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-ARG PORT
+ARG PORT=3000
 
 RUN mkdir /app
 
