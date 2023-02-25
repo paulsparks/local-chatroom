@@ -10,6 +10,23 @@ const { createHash } = require('crypto');
 const fs = require('fs');
 const PORT = process.env.PORT || 3000;
 
+function writeLog(socketId, dataString, isImage) {
+    let currentDate = new Date()
+    let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds()
+    let dateString = currentDate.toLocaleDateString() + ' ' + currentTime
+    let logTxt
+
+    if (isImage) {
+        logTxt = `(image): ${dataString}`
+    } else {
+        logTxt = dataString
+    }
+
+    fs.appendFile('./logs.txt', `${socketId}: ${logTxt} ${dateString}\n`, 'utf8', function(error) {
+        if (error) throw error
+    })
+}
+
 function hash(string) {
     return createHash('sha256').update(string).digest('hex');
 }
@@ -25,13 +42,7 @@ io.on('connection', (socket) => {
         console.log(`${socket.id}: ${dataString}`)
         io.emit('message recieved', JSON.stringify({ message: data.message, user: data.user }))
 
-        // log the file
-        let currentDate = new Date()
-        let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
-        let dateString = currentDate.toLocaleDateString() + ' ' + currentTime
-        fs.appendFile('./logs.txt', `${socket.id}: ${dataString} ${dateString}\n`, 'utf8', function(error) {
-            if (error) throw error
-        })
+        writeLog(socket.id, dataString, false)
     })
 
     socket.on('get users', () => {
@@ -50,14 +61,8 @@ io.on('connection', (socket) => {
         let imgName = hash(imgObj.image)
         console.log(`${socket.id}: (image): ${imgName}`)
         io.emit('image recieved', imgObj)
-        
-        // log the file
-        let currentDate = new Date()
-        let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
-        let dateString = currentDate.toLocaleDateString() + ' ' + currentTime
-        fs.appendFile('./logs.txt', `${socket.id}: (image): ${imgName} ${dateString}\n`, 'utf8', function(error) {
-            if (error) throw error
-        })
+
+        writeLog(socket.id, imgName, true)
     })
 
 })
