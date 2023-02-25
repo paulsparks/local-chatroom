@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-ENV VUE_APP_SOCKET_ENDPOINT='https://noisy-shoes-production.up.railway.app/'
+ENV VUE_APP_SOCKET_ENDPOINT='https://lhs-chat-logs.up.railway.app/'
 
 RUN npm install -g http-server
 

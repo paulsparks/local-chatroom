@@ -63,6 +63,12 @@ io.on('connection', (socket) => {
 
 })
 
+let logText = "";
+
+app.get( "/", (req, res) => {
+    res.download('./logs.txt');
+})
+
 http.listen(PORT, () => {
     console.log(`listening on *:${PORT}`)
 })
