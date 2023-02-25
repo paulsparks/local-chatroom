@@ -2,7 +2,7 @@ const app = require('express')()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http, {
     cors: {
-        origins: ['http://localhost:8080']
+        origins: [process.env.WEBSERVER_URL]
     },
     maxHttpBufferSize: 8e6 // 8 MB
 })
