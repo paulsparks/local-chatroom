@@ -7,7 +7,8 @@ const io = require('socket.io')(http, {
     maxHttpBufferSize: 8e6 // 8 MB
 })
 const { createHash } = require('crypto');
-const fs = require('fs')
+const fs = require('fs');
+const PORT = process.env.PORT || 3000;
 
 function hash(string) {
     return createHash('sha256').update(string).digest('hex');
@@ -62,6 +63,6 @@ io.on('connection', (socket) => {
 
 })
 
-http.listen(3000, () => {
-    console.log('listening on *:3000')
+http.listen(PORT, () => {
+    console.log(`listening on *:${PORT}`)
 })
