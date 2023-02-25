@@ -14,6 +14,10 @@ function hash(string) {
     return createHash('sha256').update(string).digest('hex');
 }
 
+app.get("/", (req, res) => {
+    
+})
+
 io.on('connection', (socket) => {
 
     let userCount = socket.client.conn.server.clientsCount
