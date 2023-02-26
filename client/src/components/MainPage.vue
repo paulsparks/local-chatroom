@@ -1,5 +1,5 @@
 <template>
-    <img src="../assets/lebanon-warning.png" id="fullscreen-image" class="hiddenElement">
+    <div id="white-background" class="hiddenElement position-fixed top-0 start-0 w-100 h-100 bg-white"><div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"><img src="../assets/lebanon-warning.png" id="fullscreen-image" class="hiddenElement mx-auto"></div></div>
     <div class="container" id="everything">
         <div class="row">
             <h1 style="margin-top: 10px; color: white; font-size: 12pt; text-align: left;">users: {{ activeUsers }}</h1>
@@ -210,6 +210,7 @@
             },
             getScared() {
                 this.toggleVisibility('fullscreen-image');
+                this.toggleVisibility('white-background');
                 this.toggleVisibility('everything');
             }
         },
@@ -266,13 +267,8 @@
         color: black !important;
     }
     #fullscreen-image {
-        position: fixed;
-        top: 0;
-        left: 0;
+        height: auto;
         width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -1;
     }
     @media only screen and (max-width: 576px) {
         #chatDisplayWrapper {
