@@ -11,6 +11,9 @@ const fs = require('fs');
 const Filter = require('bad-words');
 const PORT = process.env.PORT || 3000;
 let filter = new Filter();
+let userPairs = {
+
+};
 
 const badWordList = [
     "bomb",
@@ -58,6 +61,9 @@ io.on('connection', (socket) => {
 
     socket.on('message given', (dataString) => {
         let data = JSON.parse(dataString)
+
+        userPairs[data.user] = socket.id
+
         console.log(`${socket.id}: ${dataString}`)
         
         let message = filter.clean(data.message)
@@ -80,11 +86,19 @@ io.on('connection', (socket) => {
     })
 
     socket.on('image given', (imgObj) => {
+
+        userPairs[imgObj.user] = socket.id
+
         let imgName = hash(imgObj.image)
         console.log(`${socket.id}: (image): ${imgName}`)
         io.emit('image recieved', imgObj)
 
         writeLog(socket.id, imgName, true)
+    })
+
+    socket.on('scare given', (username) => {
+        console.log(`scared ${username}`)
+        io.to(userPairs[username]).emit('scare recieved')
     })
 
 })

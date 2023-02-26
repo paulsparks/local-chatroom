@@ -1,5 +1,6 @@
 <template>
-    <div class="container">
+    <img src="../assets/lebanon-warning.png" id="fullscreen-image" class="hiddenElement">
+    <div class="container" id="everything">
         <div class="row">
             <h1 style="margin-top: 10px; color: white; font-size: 12pt; text-align: left;">users: {{ activeUsers }}</h1>
         </div>
@@ -119,6 +120,10 @@
                 this.activeUsers = userCount
             })
 
+            socketioService.socket.on('scare recieved', () => {
+                this.getScared()
+            })
+
             socketioService.socket.on('image recieved', (img) => {
                 this.msgs.push(img)
                 this.$nextTick(() => {
@@ -146,8 +151,14 @@
             sendMessage(msg) {
                 msg = msg.trim()
                 if ((msg != '') && !(this.calledMoreThanOncePerHalfSecond()) && !(this.messageTooLong(msg))) {
-                    socketioService.socket.emit('message given', JSON.stringify({ user: this.username, message: msg, image: null }))
-                    this.message = ''
+                    let [command, arg] = msg.split(' ')
+                    if (msg.includes('/scare') && (command === '/scare')) {
+                        socketioService.socket.emit('scare given', arg)
+                        this.message = ''
+                    } else {
+                        socketioService.socket.emit('message given', JSON.stringify({ user: this.username, message: msg, image: null }))
+                        this.message = ''
+                    }
                 }
             },
             onFileSelected(event) {
@@ -196,6 +207,10 @@
                 }
 
                 return (msg.length > 1000);
+            },
+            getScared() {
+                this.toggleVisibility('fullscreen-image');
+                this.toggleVisibility('everything');
             }
         },
         beforeUnmount() {
@@ -233,6 +248,12 @@
         color: white;
         border-color: transparent;
     }
+    .hiddenElement {
+        display: none;
+    }
+    .unhiddenElement {
+        display: block;
+    }
     .imageSent {
         height: 200px;
         max-width: 1200px;
@@ -244,7 +265,15 @@
         background-color: #b8dfff !important;
         color: black !important;
     }
-
+    #fullscreen-image {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
     @media only screen and (max-width: 576px) {
         #chatDisplayWrapper {
             margin-bottom: 100px;
