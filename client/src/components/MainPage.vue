@@ -26,6 +26,38 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="spamModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Warning</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You are sending messages too quickly!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I understand</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="tooLongModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Warning</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Your message is too long!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I understand</button>
+                </div>
+                </div>
+            </div>
+        </div>
         <div class="row fixed-bottom" id="chatRow">
             <div class="col-12" id="chatBox">
                 <div class="container d-flex h-100">
@@ -61,7 +93,11 @@
                 msgs: [],
                 activeUsers: 0,
                 selectedFile: null,
-                warningModal: null
+                warningModal: null,
+                spamModal: null,
+                tooLongModal: null,
+                lastCalledTimestamp: 0,
+                callCount: 0
             }
         },
         props: ['username'],
@@ -109,7 +145,7 @@
             },
             sendMessage(msg) {
                 msg = msg.trim()
-                if (msg != '') {
+                if ((msg != '') && !(this.calledMoreThanOncePerHalfSecond()) && !(this.messageTooLong(msg))) {
                     socketioService.socket.emit('message given', JSON.stringify({ user: this.username, message: msg, image: null }))
                     this.message = ''
                 }
@@ -136,6 +172,30 @@
             resetImgSelect() {
                 this.selectedFile = null
                 document.getElementById('fileInput').value = ''
+            },
+            calledMoreThanOncePerHalfSecond() {
+                const now = Date.now();
+                
+                if (now - this.lastCalledTimestamp >= 500) {
+                    this.callCount = 0;
+                }
+
+                this.lastCalledTimestamp = now;
+                this.callCount++;
+
+                if (this.callCount > 1) {
+                    this.spamModal.show();
+                }
+
+                return this.callCount > 1;
+            },
+            messageTooLong(msg) {
+
+                if (msg.length > 1000) {
+                    this.tooLongModal.show();
+                }
+
+                return (msg.length > 1000);
             }
         },
         beforeUnmount() {
@@ -143,6 +203,8 @@
         },
         mounted() {
             this.warningModal = new Modal(document.getElementById('warningModal'))
+            this.spamModal = new Modal(document.getElementById('spamModal'))
+            this.tooLongModal = new Modal(document.getElementById('tooLongModal'))
         }
     }
 </script>

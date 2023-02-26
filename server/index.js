@@ -8,7 +8,26 @@ const io = require('socket.io')(http, {
 })
 const { createHash } = require('crypto');
 const fs = require('fs');
+const Filter = require('bad-words');
 const PORT = process.env.PORT || 3000;
+let filter = new Filter();
+
+const badWordList = [
+    "bomb",
+    "gun",
+    "shoot",
+    "drug",
+    "drugs",
+    "b0mb",
+    "b0mbs",
+    "guns",
+    "gunz",
+    "bombz",
+    "b0mbz",
+    "bombs"
+];
+
+filter.addWords(...badWordList);
 
 function writeLog(socketId, dataString, isImage) {
     let currentDate = new Date()
@@ -40,7 +59,10 @@ io.on('connection', (socket) => {
     socket.on('message given', (dataString) => {
         let data = JSON.parse(dataString)
         console.log(`${socket.id}: ${dataString}`)
-        io.emit('message recieved', JSON.stringify({ message: data.message, user: data.user }))
+        
+        let message = filter.clean(data.message)
+
+        io.emit('message recieved', JSON.stringify({ message: message, user: data.user }))
 
         writeLog(socket.id, dataString, false)
     })
