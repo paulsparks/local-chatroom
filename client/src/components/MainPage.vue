@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12 col-sm-10 offset-0 offset-sm-1 fixed-bottom" id="chatDisplayWrapper">
                 <ul id="chatDisplay">
-                    <li v-for="(msg, i) in msgs" :key="i"><h2 class="textboxText"><span style="color:aqua;">{{ msg.user }}: </span><span v-if="msg.message != null">{{ msg.message }}</span></h2><span v-if="msg.image != null"><img :src="msg.image" class="imageSent"></span></li>
+                    <li v-for="(msg, i) in msgs" :key="i"><h2 class="textboxText"><span :style="msg.style">{{ msg.user }}: </span><span v-if="msg.message != null">{{ msg.message }}</span></h2><span v-if="msg.image != null"><img :src="msg.image" class="imageSent"></span></li>
                 </ul>
             </div>
         </div>
@@ -106,7 +106,6 @@
             return {
                 message: '',
                 // msgs is an array of objects passed in from recieved messages
-                // this object currently just contains { user: '', message: '' }
                 msgs: [],
                 activeUsers: 0,
                 selectedFile: null,
@@ -122,8 +121,7 @@
         created() {
             socketioService.setupSocketConnection()
 
-            socketioService.socket.on('message recieved', (dataString) => {
-                let data = JSON.parse(dataString)
+            socketioService.socket.on('message recieved', (data) => {
                 this.msgs.push(data)
                 this.$nextTick(() => {
                     let bottomOfChat = document.getElementById('chatDisplayWrapper')
@@ -168,11 +166,12 @@
             sendMessage(msg) {
                 msg = msg.trim()
                 if ((msg != '') && !(this.calledMoreThanOncePerHalfSecond()) && !(this.messageTooLong(msg))) {
-                    let [command, arg] = msg.split(' ')
+                    let commandArgs = msg.split(' ')
+                    let command = commandArgs.shift()
                     if (msg.includes('/') && (command.startsWith("/"))) {
-                        this.runCommand(command, arg)
+                        this.runCommand(command, commandArgs)
                     } else {
-                        socketioService.socket.emit('message given', JSON.stringify({ user: this.username, message: msg, image: null }))
+                        socketioService.socket.emit('message given', { user: this.username, message: msg, image: null })
                         this.message = ''
                     }
                 }
@@ -224,15 +223,18 @@
 
                 return (msg.length > 1000);
             },
-            runCommand(command, arg) {
-                if (command === '/scare') {
-                    socketioService.socket.emit('scare given', arg)
+            runCommand(command, args) {
+                if (command === '/scare' && (args.length === 1)) {
+                    socketioService.socket.emit('scare given', args[0])
                     this.message = ''
-                } else if (command === '/admin') {
-                    socketioService.socket.emit('admin given', arg)
+                } else if (command === '/admin' && (args.length === 1)) {
+                    socketioService.socket.emit('admin given', args[0])
                     this.message = ''
-                } else if (command === '/help') {
+                } else if (command === '/help' && (args.length === 0)) {
                     socketioService.socket.emit('help')
+                    this.message = ''
+                } else if (command === '/color' && (args.length === 1)) {
+                    socketioService.socket.emit('color given', args[0])
                     this.message = ''
                 } else {
                     this.invalidCmdModal.show()
