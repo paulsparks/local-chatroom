@@ -125,7 +125,7 @@ io.on('connection', (socket) => {
 
         io.emit('message recieved', data)
 
-        writeLog(socket.id, data, false)
+        writeLog(socket.id, JSON.stringify(data), false)
     })
 
     socket.on('get users', () => {
