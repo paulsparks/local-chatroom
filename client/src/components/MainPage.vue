@@ -236,6 +236,9 @@
                 } else if (command === '/color' && (args.length === 1)) {
                     socketioService.socket.emit('color given', args[0])
                     this.message = ''
+                } else if (command === '/clearlogs' && (args.length === 0)) {
+                    socketioService.socket.emit('clear logs')
+                    this.message = ''
                 } else {
                     this.invalidCmdModal.show()
                 }

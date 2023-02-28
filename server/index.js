@@ -50,6 +50,10 @@ const defaultServerStyle = "color: red";
 
 filter.addWords(...badWordList);
 
+fs.writeFile('./logs.txt', "", 'utf8', function(error) {
+    if (error) throw error
+})
+
 function addToStyle(socketId, styleType, style) {
 
     if (!stylePairs[socketId]) {
@@ -67,7 +71,7 @@ function addToStyle(socketId, styleType, style) {
     } else {
         stylePairs[socketId] += `${styleType}:${style};`
     }
-
+    console.log(stylePairs)
 }
 
 function getMessageStyle(socketId) {
@@ -174,6 +178,15 @@ io.on('connection', (socket) => {
     socket.on('help', () => {
         if (isAdmin(socket.id)) {
             io.to(socket.id).emit('message recieved', { message: commandList, user: "Server", style: defaultServerStyle })
+        }
+    })
+
+    socket.on('clear logs', () => {
+        if (isAdmin(socket.id)) {
+            fs.writeFile('./logs.txt', "", 'utf8', function(error) {
+                if (error) throw error
+            })
+            io.to(socket.id).emit('message recieved', { message: "Logs cleared!", user: "Server", style: defaultServerStyle })
         }
     })
 
