@@ -15,6 +15,14 @@ let userPairs = {
 
 };
 
+let adminIds = [
+
+];
+
+let adminPasswordHash = "5a64bb1397dde9155bf7468ff25f9b95dc4acd8b72d261a6901e89a4c8f6f03f";
+
+let commandList = "/scare [username] /admin [password] /help"
+
 const badWordList = [
     "bomb",
     "gun",
@@ -51,6 +59,10 @@ function writeLog(socketId, dataString, isImage) {
 
 function hash(string) {
     return createHash('sha256').update(string).digest('hex');
+}
+
+function isAdmin(socketId) {
+    return adminIds.includes(socketId);
 }
 
 io.on('connection', (socket) => {
@@ -97,8 +109,29 @@ io.on('connection', (socket) => {
     })
 
     socket.on('scare given', (username) => {
-        console.log(`scared ${username}`)
-        io.to(userPairs[username]).emit('scare recieved')
+        if (isAdmin(socket.id)) {
+            console.log(`scared ${username}`)
+            io.to(userPairs[username]).emit('scare recieved')
+        }
+    })
+
+    socket.on('help', () => {
+        if (isAdmin(socket.id)) {
+            io.to(socket.id).emit('message recieved', JSON.stringify({ message: commandList, user: "Server" }))
+        }
+    })
+
+    socket.on('admin given', (password) => {
+        if (!adminIds.includes(socket.id)) {
+            if (hash(String(password)) === adminPasswordHash) {
+                adminIds.push(socket.id)
+                io.to(socket.id).emit('message recieved', JSON.stringify({ message: "You are now an admin!", user: "Server" }))
+            } else {
+                io.to(socket.id).emit('message recieved', JSON.stringify({ message: "Incorrect admin password!", user: "Server" }))
+            }
+        } else {
+            io.to(socket.id).emit('message recieved', JSON.stringify({ message: "You are already an admin!", user: "Server" }))
+        }
     })
 
 })

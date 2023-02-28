@@ -59,6 +59,22 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="invalidCmdModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Warning</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Invalid command!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I understand</button>
+                </div>
+                </div>
+            </div>
+        </div>
         <div class="row fixed-bottom" id="chatRow">
             <div class="col-12" id="chatBox">
                 <div class="container d-flex h-100">
@@ -97,6 +113,7 @@
                 warningModal: null,
                 spamModal: null,
                 tooLongModal: null,
+                invalidCmdModal: null,
                 lastCalledTimestamp: 0,
                 callCount: 0
             }
@@ -152,9 +169,8 @@
                 msg = msg.trim()
                 if ((msg != '') && !(this.calledMoreThanOncePerHalfSecond()) && !(this.messageTooLong(msg))) {
                     let [command, arg] = msg.split(' ')
-                    if (msg.includes('/scare') && (command === '/scare')) {
-                        socketioService.socket.emit('scare given', arg)
-                        this.message = ''
+                    if (msg.includes('/') && (command.startsWith("/"))) {
+                        this.runCommand(command, arg)
                     } else {
                         socketioService.socket.emit('message given', JSON.stringify({ user: this.username, message: msg, image: null }))
                         this.message = ''
@@ -208,6 +224,20 @@
 
                 return (msg.length > 1000);
             },
+            runCommand(command, arg) {
+                if (command === '/scare') {
+                    socketioService.socket.emit('scare given', arg)
+                    this.message = ''
+                } else if (command === '/admin') {
+                    socketioService.socket.emit('admin given', arg)
+                    this.message = ''
+                } else if (command === '/help') {
+                    socketioService.socket.emit('help')
+                    this.message = ''
+                } else {
+                    this.invalidCmdModal.show()
+                }
+            },
             getScared() {
                 this.toggleVisibility('fullscreen-image');
                 this.toggleVisibility('white-background');
@@ -221,6 +251,7 @@
             this.warningModal = new Modal(document.getElementById('warningModal'))
             this.spamModal = new Modal(document.getElementById('spamModal'))
             this.tooLongModal = new Modal(document.getElementById('tooLongModal'))
+            this.invalidCmdModal = new Modal(document.getElementById('invalidCmdModal'))
         }
     }
 </script>
