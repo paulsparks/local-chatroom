@@ -29,7 +29,7 @@ let stylePairs = [
 
 const adminPasswordHash = "5a64bb1397dde9155bf7468ff25f9b95dc4acd8b72d261a6901e89a4c8f6f03f";
 
-const commandList = "/scare [username] /admin [password] /help /color"
+const commandList = "/scare [username] /admin [password] /help /color /clearlogs"
 
 const badWordList = [
     "bomb",
