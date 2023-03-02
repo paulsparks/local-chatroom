@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-6" id="startScreen">
+            <div class="col-10 col-md-6" id="startScreen">
                 <div id="startText">
                     <div class="row">
                         <h2 class="openingText">Welcome!</h2>
@@ -143,6 +143,13 @@
 
     .unhiddenElement {
         display: block;
+    }
+
+    @media only screen and (max-width: 576px) {
+        .subheading {
+            color: #b8dfff;
+            font-size: 11pt;
+        }
     }
 
 </style>
