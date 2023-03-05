@@ -29,7 +29,7 @@ let stylePairs = [
 
 const adminPasswordHash = "5a64bb1397dde9155bf7468ff25f9b95dc4acd8b72d261a6901e89a4c8f6f03f";
 
-const commandList = "/scare [username] /admin [password] /help /color /clearlogs"
+const commandList = "/scare [username] /admin [password] /help /color /clearlogs /disconnectsockets"
 
 const badWordList = [
     "bomb",
@@ -127,7 +127,7 @@ io.on('connection', (socket) => {
 
         data.style = getMessageStyle(socket.id)
 
-        io.emit('message recieved', data)
+        io.emit('message received', data)
 
         writeLog(socket.id, JSON.stringify(data), false)
     })
@@ -152,7 +152,7 @@ io.on('connection', (socket) => {
     
         let imgName = hash(data.image)
         console.log(`${socket.id}: (image): ${imgName}`)
-        io.emit('image recieved', data)
+        io.emit('image received', data)
 
         writeLog(socket.id, imgName, true)
     })
@@ -160,7 +160,7 @@ io.on('connection', (socket) => {
     socket.on('scare given', (username) => {
         if (isAdmin(socket.id)) {
             console.log(`scared ${username}`)
-            io.to(userPairs[username]).emit('scare recieved')
+            io.to(userPairs[username]).emit('scare received')
         }
     })
 
@@ -168,25 +168,32 @@ io.on('connection', (socket) => {
         if (isAdmin(socket.id)) {
             if (validateColor(color)) {
                 addToStyle(socket.id, "color", color)
-                io.to(socket.id).emit('message recieved', { message: `Color changed to ${color}!`, user: "Server", style: defaultServerStyle })
+                io.to(socket.id).emit('message received', { message: `Color changed to ${color}!`, user: "Server", style: defaultServerStyle })
             } else {
-                io.to(socket.id).emit('message recieved', { message: `Invalid color!`, user: "Server", style: defaultServerStyle })
+                io.to(socket.id).emit('message received', { message: `Invalid color!`, user: "Server", style: defaultServerStyle })
             }
         }
     })
 
     socket.on('help', () => {
         if (isAdmin(socket.id)) {
-            io.to(socket.id).emit('message recieved', { message: commandList, user: "Server", style: defaultServerStyle })
+            io.to(socket.id).emit('message received', { message: commandList, user: "Server", style: defaultServerStyle })
         }
     })
 
+    socket.on('disconnect sockets', () => {
+        if (isAdmin(socket.id)) {
+            io.to(socket.id).emit('message received', { message: 'All sockets disconnected!', user: "Server", style: defaultServerStyle })
+            io.disconnectSockets()
+        }
+    })
+    
     socket.on('clear logs', () => {
         if (isAdmin(socket.id)) {
             fs.writeFile('./logs.txt', "", 'utf8', function(error) {
                 if (error) throw error
             })
-            io.to(socket.id).emit('message recieved', { message: "Logs cleared!", user: "Server", style: defaultServerStyle })
+            io.to(socket.id).emit('message received', { message: "Logs cleared!", user: "Server", style: defaultServerStyle })
         }
     })
 
@@ -194,12 +201,12 @@ io.on('connection', (socket) => {
         if (!adminIds.includes(socket.id)) {
             if (hash(String(password)) === adminPasswordHash) {
                 adminIds.push(socket.id)
-                io.to(socket.id).emit('message recieved', { message: "You are now an admin!", user: "Server", style: defaultServerStyle })
+                io.to(socket.id).emit('message received', { message: "You are now an admin!", user: "Server", style: defaultServerStyle })
             } else {
-                io.to(socket.id).emit('message recieved', { message: "Incorrect admin password!", user: "Server", style: defaultServerStyle })
+                io.to(socket.id).emit('message received', { message: "Incorrect admin password!", user: "Server", style: defaultServerStyle })
             }
         } else {
-            io.to(socket.id).emit('message recieved', { message: "You are already an admin!", user: "Server", style: defaultServerStyle })
+            io.to(socket.id).emit('message received', { message: "You are already an admin!", user: "Server", style: defaultServerStyle })
         }
     })
 

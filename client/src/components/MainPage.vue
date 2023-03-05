@@ -105,7 +105,7 @@
         data() {
             return {
                 message: '',
-                // msgs is an array of objects passed in from recieved messages
+                // msgs is an array of objects passed in from received messages
                 msgs: [],
                 activeUsers: 0,
                 selectedFile: null,
@@ -121,7 +121,7 @@
         created() {
             socketioService.setupSocketConnection()
 
-            socketioService.socket.on('message recieved', (data) => {
+            socketioService.socket.on('message received', (data) => {
                 this.msgs.push(data)
                 this.$nextTick(() => {
                     let bottomOfChat = document.getElementById('chatDisplayWrapper')
@@ -135,11 +135,11 @@
                 this.activeUsers = userCount
             })
 
-            socketioService.socket.on('scare recieved', () => {
+            socketioService.socket.on('scare received', () => {
                 this.getScared()
             })
 
-            socketioService.socket.on('image recieved', (img) => {
+            socketioService.socket.on('image received', (img) => {
                 this.msgs.push(img)
                 this.$nextTick(() => {
                     let bottomOfChat = document.getElementById('chatDisplayWrapper')
@@ -238,6 +238,9 @@
                     this.message = ''
                 } else if (command === '/clearlogs' && (args.length === 0)) {
                     socketioService.socket.emit('clear logs')
+                    this.message = ''
+                } else if (command === '/disconnectsockets' && (args.length === 0)) {
+                    socketioService.socket.emit('disconnect sockets')
                     this.message = ''
                 } else {
                     this.invalidCmdModal.show()
