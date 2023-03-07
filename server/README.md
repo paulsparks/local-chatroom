@@ -1,0 +1,4 @@
+## Run server
+```
+node .
+```
