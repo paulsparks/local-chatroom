@@ -11,4 +11,4 @@ node .
 ```
 
 ## Website link (hosted on railway.app in client and server docker images)
-[LHS Chat] https://www.lhschat.com
+https://lhschat.com
