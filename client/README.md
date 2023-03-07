@@ -1,10 +1,5 @@
 # local-chatroom
 
-## Run the project for development this way!
-```
-npm run electron:serve
-```
-
 ## Project setup
 ```
 npm install
@@ -18,6 +13,11 @@ npm run serve
 ### Compiles and minifies for production
 ```
 npm run build
+```
+
+## If you want to run with electron (no longer supporting electron build, may still work)
+```
+npm run electron:serve
 ```
 
 ### Lints and fixes files
