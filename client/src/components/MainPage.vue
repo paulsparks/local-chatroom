@@ -139,14 +139,6 @@
                 this.getScared()
             })
 
-            socketioService.socket.on('image received', (img) => {
-                this.msgs.push(img)
-                this.$nextTick(() => {
-                    let bottomOfChat = document.getElementById('chatDisplayWrapper')
-                    bottomOfChat.scrollTop = (bottomOfChat.scrollHeight)
-                })
-            })
-
         },
         methods: {
             removeItem(item) {
@@ -188,7 +180,7 @@
                 if (this.selectedFile) {
                     const reader = new FileReader()
                     reader.onload = e => {
-                        socketioService.socket.emit('image given', { user: this.username, message: null, image: e.target.result })
+                        socketioService.socket.emit('message given', { user: this.username, message: null, image: e.target.result })
                     }
                     reader.readAsDataURL(this.selectedFile)
                     this.selectedFile = null

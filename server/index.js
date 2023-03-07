@@ -54,6 +54,37 @@ fs.writeFile('./logs.txt', "", 'utf8', function(error) {
     if (error) throw error
 })
 
+const expectedGivenMessageParams = ['message', 'user', 'image'];
+
+function sendMessageSafe(msgObj, socket) {
+
+    let finalMsg = {};
+
+    expectedGivenMessageParams.forEach(param => {
+        if (msgObj[param]) {
+            finalMsg[param] = msgObj[param];
+        }
+    });
+
+    if (finalMsg['user']) {
+        userPairs[finalMsg.user] = socket.id
+    }
+
+    if (finalMsg['message']) {
+        finalMsg.message = filter.clean(finalMsg.message)
+    }
+
+    finalMsg.style = getMessageStyle(socket.id)
+
+    io.emit('message received', finalMsg)
+
+    if (finalMsg['image']) {
+        finalMsg.image = hash(finalMsg.image);
+    }
+
+    writeLog(socket.id, JSON.stringify(finalMsg), false)
+}
+
 function addToStyle(socketId, styleType, style) {
 
     if (!stylePairs[socketId]) {
@@ -71,7 +102,6 @@ function addToStyle(socketId, styleType, style) {
     } else {
         stylePairs[socketId] += `${styleType}:${style};`
     }
-    console.log(stylePairs)
 }
 
 function getMessageStyle(socketId) {
@@ -98,7 +128,11 @@ function writeLog(socketId, dataString, isImage) {
         logTxt = dataString
     }
 
-    fs.appendFile('./logs.txt', `${socketId}: ${logTxt} ${dateString}\n`, 'utf8', function(error) {
+    let finalLogString = `${socketId}: ${logTxt} ${dateString}\n`
+
+    console.log(finalLogString)
+
+    fs.appendFile('./logs.txt', finalLogString, 'utf8', function(error) {
         if (error) throw error
     })
 }
@@ -118,18 +152,7 @@ io.on('connection', (socket) => {
     console.log(`user ${socket.id} connected`)
 
     socket.on('message given', (data) => {
-
-        userPairs[data.user] = socket.id
-
-        console.log(`${socket.id}: ${JSON.stringify(data)}`)
-        
-        data.message = filter.clean(data.message)
-
-        data.style = getMessageStyle(socket.id)
-
-        io.emit('message received', data)
-
-        writeLog(socket.id, JSON.stringify(data), false)
+        sendMessageSafe(data, socket);
     })
 
     socket.on('get users', () => {
@@ -142,19 +165,6 @@ io.on('connection', (socket) => {
 
         io.emit('user count', userCount)
         console.log(`user ${socket.id} disconnected`)
-    })
-
-    socket.on('image given', (data) => {
-
-        userPairs[data.user] = socket.id
-
-        data.style = getMessageStyle(socket.id)
-    
-        let imgName = hash(data.image)
-        console.log(`${socket.id}: (image): ${imgName}`)
-        io.emit('image received', data)
-
-        writeLog(socket.id, imgName, true)
     })
 
     socket.on('scare given', (username) => {
