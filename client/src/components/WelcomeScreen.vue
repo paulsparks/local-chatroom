@@ -54,7 +54,8 @@
                     'Nefarious',
                     'Squeamish',
                     'Sheepish',
-                    'Inky'
+                    'Inky',
+                    'Scrulumptuous'
                 ],
                 animalList: [
                     'Monkey',
@@ -77,7 +78,9 @@
                     'Ferret',
                     'Lamb',
                     'Squid',
-                    'Shark'
+                    'Shark',
+                    'Funkleberry',
+                    'Shmibble'
                 ],
                 generatedName: ''
             }
