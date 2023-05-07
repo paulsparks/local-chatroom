@@ -71,7 +71,12 @@ function sendMessageSafe(msgObj, socket) {
     }
 
     if (finalMsg['message']) {
-        finalMsg.message = filter.clean(finalMsg.message)
+        try {
+            finalMsg.message = filter.clean(finalMsg.message)
+        } catch {
+            // usually empty catch blocks are bad, however this seems to be an exception
+            // if it has issues filtering a message because of weird formatting, chances are that it doesn't need to filter said message anyways
+        }
     }
 
     finalMsg.style = getMessageStyle(socket.id)
@@ -79,7 +84,11 @@ function sendMessageSafe(msgObj, socket) {
     io.emit('message received', finalMsg)
 
     if (finalMsg['image']) {
-        finalMsg.image = hash(finalMsg.image);
+        try {
+            finalMsg.image = hash(finalMsg.image);
+        } catch {
+            finalMsg.image = "(image hash error)";
+        }
     }
 
     writeLog(socket.id, JSON.stringify(finalMsg), false)
